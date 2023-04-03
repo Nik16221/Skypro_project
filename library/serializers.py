@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from library.models import Author, Reader, Book
 
@@ -15,11 +16,10 @@ class BookSerializers(serializers.ModelSerializer):
 
 
 class ReaderSerializers(serializers.ModelSerializer):
-    def validate(self, data):
-        active_books = data.get('active_books')
-        if len(active_books) > 3:
-            raise ValueError('Превышено максимальное число книг! (3)')
-        return super().validate(data)
+    def validate_active_books(self, books: list) -> list:
+        if len(books) > 3:
+            raise ValidationError('Превышено максимальное число книг! (3)')
+        return books
 
     class Meta:
         model = Reader

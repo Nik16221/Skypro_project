@@ -18,7 +18,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from library.views import AuthorView, BookView, ReaderView
+from rest_framework.authtoken import views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+from library.views import AuthorView, BookView, ReaderView, Logout
 
 router = routers.SimpleRouter()
 router.register('authors', AuthorView)
@@ -28,6 +31,10 @@ router.register('readers', ReaderView)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('login/', views.obtain_auth_token),
+    path('logout/', Logout.as_view()),
+    path('token/', TokenObtainPairView.as_view()),
+    path('token/refresh/', TokenRefreshView.as_view()),
 ]
 
 if settings.DEBUG:
