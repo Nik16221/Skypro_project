@@ -1,10 +1,9 @@
 from rest_framework import status
-from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from library.models import Reader, Book, Author
-from library.permissions import IsOwner
 from library.serializers import AuthorSerializers, BookSerializers, ReaderSerializers
 
 
@@ -41,9 +40,9 @@ class ReaderView(ModelViewSet):
     def get_permissions(self):
 
         if self.action == ['list', 'retrieve']:
-            permission_classes = [IsAuthenticated, IsOwner]
+            permission_classes = [IsAuthenticatedOrReadOnly]
         else:
-            permission_classes = [IsAdminUser, IsOwner]
+            permission_classes = [IsAdminUser, IsAuthenticated]
         return [permission() for permission in permission_classes]
 
 
